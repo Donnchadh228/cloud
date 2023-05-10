@@ -1,0 +1,28 @@
+.whiteInput{
+    width: 240px;
+    height: 30px;
+    border-radius: 4px;
+    color:black;
+    background-color: #D9D9D9;
+    font-weight: bold;
+    border-bottom:3px solid #D9D9D9;
+    padding: 2px 2px 2px 5px;
+    transition: .5s box-shadow, .2s transform;
+    &:focus{
+        animation: color 1.5s infinite;
+    }
+    
+}
+
+@keyframes color {
+    0%{
+        
+        border-bottom: 3px solid #D9D9D9;
+    }
+    50%{
+        border-bottom: 3px solid rgb(54, 163, 190);
+    }
+    100%{
+        border-bottom: 3px solid #D9D9D9;
+    }
+}

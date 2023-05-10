@@ -1,0 +1,51 @@
+.auth{
+    // background: #232323;
+    // width: 580px;
+    // padding: 30px 40px;
+    // height: 440px;
+    // margin: auto;
+    // color:white;
+    // border-radius: 4px;
+    // border-bottom: 1px solid white;
+    // box-shadow: -1px 6px 15px black;
+    // display: flex;
+    // flex-wrap: wrap;
+    // justify-content: center;
+    &_title{
+        font-size: 40px;
+        font-weight: bolder;
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    &_group{
+        flex-basis: 100%;
+        font-size: 18px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-bottom: 20px;
+        input::placeholder{
+            color:151515;
+        }
+        label,input{
+            padding: 0px 5px;
+            text-align: left;
+            flex-basis: 50%;
+        }
+    }
+    &_error{
+        margin-bottom: 20px;
+        color:red;
+        text-align: center;
+        font-weight: bold;
+        flex-basis: 100%;
+    }
+}
+.backgroundImage{
+    width: 100%;
+    flex-grow: 2;
+    display: flex;
+    align-items: center;
+    padding-bottom: 10px;
+    background-image: url('../../../assets/backgroundhome.png');
+}

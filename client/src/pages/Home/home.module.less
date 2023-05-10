@@ -1,0 +1,118 @@
+.home{
+    background-image: url('../../../assets/backgroundhome.png');
+    color: white;
+    align-items: start;
+    height: auto;
+    justify-content: space-between;
+    flex-grow: 2;
+    text-align: center;
+    padding-bottom: 10px;
+}
+.h2{
+    font-size: 35px;
+    position: relative;
+    text-align: center;
+    display: inline-block;
+    max-width: 980px;
+    margin: 20px auto 40px auto;
+    text-shadow: 2px 2px 3px black;
+    &::before{
+        content: "";
+        position: absolute;
+        width: 70%;
+        height: 2px;
+        background-color: #fff;
+        bottom: -5px;
+        left: 15%;
+    }
+}
+.info{
+    max-width:880px;
+    margin: auto;
+    text-align: center;
+    margin-bottom: 50px;
+    font-size: 18px;
+    text-shadow: 2px 2px 3px black;
+    
+}
+.free{
+    font-size: 27px;
+    margin-left: auto;
+    max-width: 300px;
+    font-weight: bold;
+    position: relative;
+    z-index: 2;
+    margin-bottom: 40px;
+    &::before{
+        content: "";
+        width: 1px;
+        position: absolute;
+        left: 45%;
+        top: 45%;
+        border-radius: 100%;
+
+        box-shadow: 0px 0px 90px 40px white;
+        z-index: -1;
+        animation: shadow 1.5s infinite;
+    }
+}
+.red {
+
+    color: rgb(250, 12, 12);
+    font-weight: bolder;
+}
+
+.home .button{
+
+    max-width: 330px;
+    max-height: 108px;
+    min-width: 300px;
+    min-height: 90px;
+    border-radius: 13px;
+    background-color: #151515;
+    color:white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    margin-bottom: 10px;
+
+    font-size: 34px;
+    font-weight: bold;
+    animation: rocking 3s infinite;
+    position: relative;
+    border-bottom: 1px solid white;
+    transition: 1s all;
+    box-shadow: 0px 5px 15px 5px black;
+    &:hover{
+        transition: 1s all;
+        box-shadow: 0px 5px 15px 5px white;
+    }
+
+}
+@keyframes rocking {
+    0% {
+        transform:  rotate(-5deg);
+    }
+
+    50% {
+        transform:  rotate(5deg);
+    }
+
+    100% {
+        transform:  rotate(-5deg);
+    }
+}
+
+@keyframes shadow {
+    0%{
+box-shadow: 0px 0px 90px 40px white;
+    }
+    50%{
+box-shadow: 0px 0px 80px 30px white;
+    }
+    100%{
+box-shadow: 0px 0px 90px 40px white;
+    }
+}

@@ -1,0 +1,143 @@
+* {
+	padding: 0px;
+	margin: 0px;
+	border: none;
+	font-family: sans-serif;
+	color:inherit
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	
+}
+
+a,
+a:link,
+a:visited {
+	text-decoration: none;
+	display: inline-block;
+}
+
+a:hover {
+	text-decoration: none;
+}
+aside,
+nav,
+footer,
+header,
+section,
+main {
+	display: block;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+	font-size: inherit;
+	font-weight: inherit;
+}
+
+ul,
+ul li {
+	list-style: none;
+}
+
+img {
+	vertical-align: top;
+}
+
+img,
+svg {
+	max-width: 100%;
+	height: auto;
+}
+
+address {
+	font-style: normal;
+}
+
+
+
+input,
+textarea,
+button,
+select {
+	font-family: inherit;
+	font-size: inherit;
+	color: inherit;
+	background-color: transparent;
+}
+
+input::-ms-clear {
+	display: none;
+}
+
+button,
+input[type="submit"] {
+	display: inline-block;
+	box-shadow: none;
+	background-color: transparent;
+	background: none;
+	cursor: pointer;
+}
+
+input:focus,
+input:active,
+button:focus,
+button:active {
+	outline: none;
+}
+
+button::-moz-focus-inner {
+	padding: 0;
+	border: 0;
+}
+
+label {
+	cursor: pointer;
+}
+
+legend {
+	display: block;
+}
+
+.flexbox {
+  display: flex;
+}
+.space-between {
+	justify-content: space-between;
+}
+.App{
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	min-height: 100vh;
+}
+.background-image{
+	background-image: url('../assets/backgroundhome.png');
+}
+
+
+
+#root {
+	background-color: #2A2B32;
+	min-height: 100vh;
+	min-width: 100vh;
+}
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 20px;
+}
+input:focus,
+button:focus {
+	transition: .5s box-shadow, .2s transform;
+	transform: scale(1.1);
+	box-shadow: 0px 0px 10px rgb(54, 163, 190);
+}
