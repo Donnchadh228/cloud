@@ -1,0 +1,18 @@
+SERVER_PORT = 
+DB_NAME = 
+DB_USER = 
+DB_PASSWORD = 
+DB_HOST = 
+
+SECRET_KEY = 
+SECRET_REFRESH_KEY = 
+SMTP_HOST = 
+SMTP_PORT = 
+SMTP_USER = m
+SMTP_PASSWORD = 
+
+API_URL = http://localhost:3000
+
+CLIENT_URL = http://localhost:5173
+
+FILEPATH = D:\node\cloud\server\files
