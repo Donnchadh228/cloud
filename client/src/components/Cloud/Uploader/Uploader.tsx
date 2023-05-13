@@ -5,8 +5,6 @@ import { useAppDispatch, useAppSelector } from "../../../hooks/redux"
 import { uploadSlice } from "../../../store/reducers/uploaderReducer"
 
 const Uploader = () => {
-	// const file:any = {id:2,name:"ASDASD", }
-
 	const { isVisible, files } = useAppSelector((state) => state.uploadSlice)
 	const { hideUploader, removeUploadFile, showUploader } = uploadSlice.actions
 	const [bool, setBool] = useState<boolean>(false)
