@@ -5,9 +5,14 @@
 		flex-wrap: wrap;
 
 		&_rows {
+			&:first-child {
+				transform: translateX(0px);
+			}
+
 			margin-bottom: 20px;
 			position: relative;
-
+			transform: translateX(0px);
+			animation: anima 0.5s;
 			&:first-child {
 				min-height: 50px;
 				max-height: 50px;
@@ -20,6 +25,7 @@
 			justify-content: space-between;
 
 			div {
+				text-align: center;
 				overflow: hidden;
 				display: flex;
 				align-items: center;
@@ -29,7 +35,6 @@
 				position: relative;
 
 				button {
-					
 					transition: 1s all;
 					opacity: 0;
 					position: absolute;
@@ -41,7 +46,6 @@
 					padding: 5px 40px;
 					border-bottom: 3px solid white;
 					font-size: 20px;
-
 				}
 			}
 
@@ -49,7 +53,6 @@
 
 			&:hover {
 				button {
-				
 					opacity: 1;
 					right: 0px;
 				}
@@ -66,6 +69,9 @@
 		}
 
 		&_name {
+			display: block;
+			word-wrap: break-word;
+
 			flex-basis: 60%;
 			border-left: 1px solid white;
 		}
@@ -83,5 +89,65 @@
 		&_folder {
 			cursor: pointer;
 		}
+	}
+}
+.noAnim {
+	transform: translateX(0px);
+}
+@keyframes anima {
+	0% {
+		transform: translateX(-500px);
+	}
+	100% {
+		transform: translateX(0px);
+	}
+}
+.no_file {
+	text-align: center;
+	margin: auto;
+	width: 100%;
+	font-size: 30px;
+}
+@media (max-width: 1200px) {
+	.files_item_rows div button {
+		font-size: 16px;
+		padding: 5px;
+		height: 100%;
+	}
+	.files_item_size {
+		padding: 5px;
+		flex-basis: 25%;
+	}
+}
+@media (max-width: 700px) {
+	.files_item_rows {
+		flex-wrap: wrap;
+		height: 150px;
+	}
+	.files_item_name {
+		span {
+			display: block;
+			width: 100%;
+			word-wrap: break-word;
+		}
+	}
+	.files_item_rows div {
+		flex-basis: 50%;
+	}
+
+	.files_item_rows div {
+		text-align: center;
+		font-size: 16px;
+	}
+	.files_item_rows div button {
+		font-size: 11px;
+		padding: 0px;
+		height: 100%;
+	}
+	.files_item_rows {
+		font-size: 16px;
+	}
+	.files_item_icon {
+		flex-basis: 20%;
 	}
 }

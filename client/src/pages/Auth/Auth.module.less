@@ -1,3 +1,37 @@
+.loading {
+    flex-basis: 100%;
+    text-align: center;
+    margin: 10px 0px;
+    font-size: 50px;
+
+    span {
+
+        display: block;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 10px solid #4c4c4c;
+        border-top-color: #f9b325;
+        box-shadow:
+            inset 0px 0px 10px rgba(255, 255, 255, 0.6),
+            0px 0px 10px rgba(0, 0, 0, 0.5),
+            0px 0px 20px rgba(0, 0, 0, 0.2),
+            0px 0px 30px #f9b325;
+        margin: auto;
+        animation: spin 1s linear infinite;
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 .auth{
     // background: #232323;
     // width: 580px;

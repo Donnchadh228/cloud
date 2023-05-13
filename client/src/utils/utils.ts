@@ -14,7 +14,7 @@ export const fileExtension = (type: string): string => {
 		case ext.webp:
 		case ext.ico:
 		case ext.jpg:
-			return "../../public/img.png"
+			return "../../img.png"
 
 		default:
 			return "../../../unknown.png"

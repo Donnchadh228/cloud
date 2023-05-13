@@ -7,6 +7,7 @@ import { fileSlice } from "../../../store/reducers/fileReducer"
 import { queryFile } from "../../../store/reducers/actionCreators/file"
 import { propertiesFile } from "../../../models/IFIle"
 import { userSlice } from "../../../store/reducers/userReducer"
+import { Link } from "react-router-dom"
 interface FileItemInterface {
 	name: string
 	date: string
@@ -52,13 +53,22 @@ const FileItem: FC<FileItemInterface> = ({
 			useDispatch(changeSpace(-file!.size))
 		}
 	}
+	const Links = async (id: number) => {
+		file?.accessLink
+			? navigator.clipboard
+					.writeText(
+						import.meta.env.VITE_APP_LINK_SARING + "?Link=" + file.accessLink
+					)
+					.then(() => alert("Посилання скопійоване"))
+			: queryFile.getLinkFile(id, useDispatch)
+	}
 	return (
 		<div className={`${s.files_item_rows} ${isFolder}`} onClick={change}>
 			<div className={s.files_item_icon}>
 				<img src={source} alt="#" />
 			</div>
 			<div className={s.files_item_name}>
-				{name}
+				<span>{name}</span>
 				{type == "dir" ? (
 					""
 				) : (
@@ -79,7 +89,9 @@ const FileItem: FC<FileItemInterface> = ({
 				{type == "dir" ? (
 					""
 				) : (
-					<BlackButton tabIndex={-1}>Поділитись</BlackButton>
+					<BlackButton onClick={() => Links(id)} tabIndex={-1}>
+						{file?.accessLink ? "Скопіювати посилання" : "Поділитись"}
+					</BlackButton>
 				)}
 			</div>
 		</div>

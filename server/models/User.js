@@ -8,11 +8,11 @@ const User = sequelize.define(
 		email: { type: DataTypes.STRING, unique: true, require: true },
 		password: { type: DataTypes.STRING, require: true },
 		diskSpace: {
-			type: DataTypes.FLOAT,
+			type: DataTypes.BIGINT,
 			defaultValue: 1024 ** 3 * 5,
 			require: true,
 		},
-		usedSpace: { type: DataTypes.FLOAT, require: true, defaultValue: 0 },
+		usedSpace: { type: DataTypes.BIGINT, require: true, defaultValue: 0 },
 		avatar: { type: DataTypes.STRING },
 		isActivated: {
 			type: DataTypes.BOOLEAN,

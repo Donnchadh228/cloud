@@ -9,6 +9,8 @@ import { queryFile } from "../../store/reducers/actionCreators/file"
 import PopUp from "../../components/UI/PopUp/PopUp"
 import { resizePath } from "../../utils/utils"
 import PopUpUpload from "../../components/UI/PopUp/PopUpUpload"
+import Uploader from "../../components/Cloud/Uploader/Uploader"
+import WhiteInput from "../../components/UI/Input/WhiteInput/WhiteInput"
 const Cloud = () => {
 	const [loading, setLoading] = useState<boolean>(true)
 	const { currentDir, files } = useAppSelector((state) => state.fileReducer)
@@ -20,6 +22,9 @@ const Cloud = () => {
 	const [popup, setPopup] = useState<number>(0)
 	const [path, setPath] = useState<string>("")
 	const [objectCurrentFile, setObjectCurrentFile] = useState<any>({})
+	const [sort, setSort] = useState<string>("")
+	const [search, setSearch] = useState<string>("")
+	const [searchTimeout, setSearchTimeout] = useState<any>(false)
 	// useEffect(() => {
 	// 	const asd = async () => {
 	// 		const paths = await queryFile.getCurrentPath(currentDir!)
@@ -30,24 +35,25 @@ const Cloud = () => {
 	// 		}
 	// 	}
 	// })
-	useEffect(() => {
-		const fetchFile = async () => {
-			const query = await queryFile.getFiles(currentDir!)
-			const paths = await queryFile.getCurrentPath(currentDir!)
+	const fetchFile = async () => {
+		setLoading(true)
+		const query = await queryFile.getFiles(currentDir!, sort)
+		const paths = await queryFile.getCurrentPath(currentDir!)
 
-			setPath(resizePath(paths.path))
-			query.currentDir = currentDir
-			if (query.files) {
-				setLoading(false)
-				useDispatch(getFiles(query))
-			}
+		setPath(resizePath(paths.path))
+		query.currentDir = currentDir
+		if (query.files) {
+			setLoading(false)
+			useDispatch(getFiles(query))
 		}
+	}
+	useEffect(() => {
 		fetchFile()
-	}, [currentDir])
+	}, [currentDir, sort])
 
 	const backDir = async () => {
 		const paths = await queryFile.getCurrentPath(currentDir!)
-		console.log(paths.parentId)
+
 		if (paths.parentId) {
 			setObjectCurrentFile(paths)
 			setPath(resizePath(paths.path))
@@ -60,47 +66,107 @@ const Cloud = () => {
 		event.preventDefault()
 		setPopup(n)
 	}
+	const searchFile = (e: any) => {
+		setSearch(e.target.value)
+		if (searchTimeout != false) {
+			clearTimeout(searchTimeout)
+		}
+
+		if (e.target.value != "") {
+			setLoading(true)
+			setSearchTimeout(
+				setTimeout(
+					() => {
+						queryFile
+							.searchFiles(e.target.value, useDispatch)
+							.then(() => setLoading(false))
+					},
+					500,
+					e.target.value
+				)
+			)
+		} else {
+			fetchFile()
+		}
+	}
 	document.title = "/CLOUD//"
+
 	return (
-		<div className={s.cloud}>
-			{loading ? (
-				<div className={s.loading}>
-					Loading...
-					<span></span>
+		<>
+			{!user!.isActivated ? (
+				<div className={s.activateEmail}>
+					Підтвердіть свій обліковий запис через електронну пошту, щоб отримати
+					повний доступ до сервісу. Перевірте папку "Спам" або "Нежадані
+					повідомлення", якщо не знайшли лист від нас.
 				</div>
 			) : (
-				<Container>
-					<div className={s.button}>
-						<BlackButton onClick={backDir}>
-							<span>назад</span>
-						</BlackButton>
-						<BlackButton onClick={() => openPopup(event!, 1)}>
-							Створити нову теку
-						</BlackButton>
-						<BlackButton onClick={() => openPopup(event!, 2)}>
-							{" "}
-							Завантажити файл
-						</BlackButton>
-					</div>
-					<div className={s.direction}>
-						{user?.login}\{path}
-					</div>
-					<div className={s.files}>
-						<Files />
-					</div>
-				</Container>
+				<div className={s.cloud}>
+					<Container>
+						<div className={s.button}>
+							<BlackButton onClick={backDir}>
+								<span>назад</span>
+							</BlackButton>
+							<BlackButton onClick={() => openPopup(event!, 1)}>
+								Створити нову теку
+							</BlackButton>
+							<BlackButton onClick={() => openPopup(event!, 2)}>
+								Завантажити файл
+							</BlackButton>
+						</div>
+						<div className={s.sortSearch}>
+							<select
+								className={s.select}
+								defaultValue={sort ? sort : "default"}
+								onChange={(e) => setSort(e.target.value)}
+							>
+								<option value="default" disabled>
+									Виберіть тип сортування
+								</option>
+								<option value="name">Name</option>
+								<option value="type">type</option>
+								<option value="createdAt">date</option>
+								<option value="size">size</option>
+							</select>
+							<WhiteInput
+								onChange={searchFile}
+								setValue={setSearch}
+								type="input"
+								value={search}
+								placeholder="Введіть назву файлу"
+							/>
+						</div>
+						<div className={s.direction}>
+							{user?.login}\{path}
+						</div>
+						{loading ? (
+							<div className={s.loading}>
+								Loading...
+								<span></span>
+							</div>
+						) : (
+							<div className={s.files}>
+								<Files />
+							</div>
+						)}
+					</Container>
+
+					{popup == 1 ? (
+						<PopUp setClosePopup={setPopup} title="Create dir"></PopUp>
+					) : (
+						""
+					)}
+					{popup == 2 ? (
+						<PopUpUpload
+							setClosePopup={setPopup}
+							title="UploadFile"
+						></PopUpUpload>
+					) : (
+						""
+					)}
+					{<Uploader />}
+				</div>
 			)}
-			{popup == 1 ? (
-				<PopUp setClosePopup={setPopup} title="Create dir"></PopUp>
-			) : (
-				""
-			)}
-			{popup == 2 ? (
-				<PopUpUpload setClosePopup={setPopup} title="UploadFile"></PopUpUpload>
-			) : (
-				""
-			)}
-		</div>
+		</>
 	)
 }
 

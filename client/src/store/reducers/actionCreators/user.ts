@@ -27,7 +27,7 @@ export class queryUser {
 
 			return user
 		} catch (e: any) {
-			alert(e)
+			// alert(e)
 			Error(e.response.data.message)
 			return undefined
 		}
@@ -54,6 +54,7 @@ export class queryUser {
 	static checkToken = async (): Promise<IUser | null> => {
 		try {
 			// console.log(localStorage.getItem("accessToken"))
+			console.log(import.meta.env.VITE_APP_API_URL + "/api/user/checkAuth")
 			const response = await $authHost.post(
 				import.meta.env.VITE_APP_API_URL + "/api/user/checkAuth"
 			)
@@ -64,6 +65,7 @@ export class queryUser {
 				return response.data
 			}
 		} catch (e) {
+			console.log(e)
 			return null
 		}
 	}

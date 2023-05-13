@@ -1,0 +1,44 @@
+.link {
+	color: white;
+	width: 100vh;
+	height: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	text-align: center;
+	font-size: 20px;
+	& div {
+		flex-basis: 30%;
+		text-align: center;
+		margin: auto;
+	}
+}
+
+.loading {
+	text-align: center;
+	margin-top: 50px;
+	font-size: 50px;
+	color: white;
+	span {
+		display: block;
+		width: 100px;
+		height: 100px;
+		border-radius: 50%;
+		border: 10px solid #4c4c4c;
+		border-top-color: #f9b325;
+		box-shadow: inset 0px 0px 10px rgba(255, 255, 255, 0.6),
+			0px 0px 10px rgba(0, 0, 0, 0.5), 0px 0px 20px rgba(0, 0, 0, 0.2),
+			0px 0px 30px #f9b325;
+		margin: auto;
+		animation: spin 1s linear infinite;
+	}
+}
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}

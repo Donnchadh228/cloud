@@ -71,12 +71,12 @@ class UserController {
 		try {
 			const activationLink = req.params.link
 			await userService.activate(activationLink)
-			return res.redirect(process.env.CLIENT_URL)
+			return res.redirect(process.env.CLIENT_URL + "/cloud")
 		} catch (e) {
 			next(e)
 		}
 	}
-	async validateAccessToken(req, res) {
+	async validateAccessToken(req, res, next) {
 		try {
 			const authHeader = req.headers.authorization
 			const token = authHeader && authHeader.split(" ")[1]

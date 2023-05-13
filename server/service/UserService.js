@@ -23,7 +23,7 @@ class userService {
 		}
 		const hashPassword = await bcrypt.hash(password, 5)
 		const activationLink = uuid.v4()
-		//УБРАТЬ КОММЕНТАРИИ
+		//Розкоментувати
 		// await mailService.sendActivationMail(
 		// 	email,
 		// 	`${process.env.API_URL}/api/user/activate/${activationLink}`
@@ -106,7 +106,7 @@ class userService {
 		}
 		await UserModel.update(
 			{ isActivated: true },
-			{ where: { id: candidate.id } }
+			{ where: { id: candidate.userId } }
 		)
 		await candidate.destroy()
 	}

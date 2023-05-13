@@ -1,7 +1,7 @@
 import React, { ChangeEvent, memo } from "react"
 import s from "./WhiteInput.module.less"
 interface InputProps {
-	setValue: (value: string) => void
+	setValue?: (value: string) => void
 	value: string
 	type: string
 	[props: string]: any
@@ -14,7 +14,7 @@ const WhiteInput: React.FC<InputProps> = ({
 	...props
 }) => {
 	const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
-		setValue(event.target.value)
+		setValue!(event.target.value)
 	}
 	return (
 		<input

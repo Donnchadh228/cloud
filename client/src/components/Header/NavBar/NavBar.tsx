@@ -15,6 +15,7 @@ import {
 	REGISTRATION_ROUTE,
 	LOGIN_ROUTE,
 	HOME_ROUTE,
+	CLOUD_ROUTE,
 } from "../../../utils/const"
 import { fileSlice } from "../../../store/reducers/fileReducer"
 
@@ -33,7 +34,7 @@ const NavBar: FC = () => {
 		<div className={s.navbar}>
 			<Container className="flexbox space-between">
 				<div className={s.navbar__left}>
-					<NavLink to={HOME_ROUTE}>/CLOUD//</NavLink>
+					<NavLink to={isAuth ? CLOUD_ROUTE : HOME_ROUTE}>/CLOUD//</NavLink>
 				</div>
 				{isAuth ? (
 					[

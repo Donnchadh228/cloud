@@ -35,7 +35,7 @@ const Auth = () => {
 	const [password, setPassword] = useState<string>("")
 	const [emailOrLogin, setEmailOrLogin] = useState<string>("")
 	const [error, setError] = useState<String>("")
-
+	const [loading, setLoading] = useState<boolean>(false)
 	//ТУТ НАЧИНАЕМ
 	useEffect(() => {
 		if (isAuth) {
@@ -44,6 +44,7 @@ const Auth = () => {
 		}
 	}, [isAuth])
 	const auth = async () => {
+		setLoading(true)
 		if (needLogin) {
 			let user = await queryUser.registration(email, login, password, setError)
 
@@ -59,6 +60,7 @@ const Auth = () => {
 		}
 		const currentDirId = await queryFile.getCurrent()
 		dispatch(setCurrentDir(currentDirId))
+		setLoading(false)
 	}
 
 	return (
@@ -119,9 +121,18 @@ const Auth = () => {
 						/>
 					</div>
 					<div className={s.auth_error}>{error}</div>
+
 					<BlackButton onClick={auth}>
 						{needLogin ? "Зареєструватись" : "Увійти"}
 					</BlackButton>
+					{loading ? (
+						<div className={s.loading}>
+							{/* Loading... */}
+							<span></span>
+						</div>
+					) : (
+						""
+					)}
 				</MyForm>
 			</div>
 		</>

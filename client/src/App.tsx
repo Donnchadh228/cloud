@@ -5,7 +5,7 @@ import { BrowserRouter } from "react-router-dom"
 import AppRouter from "./components/AppRouter"
 import { queryUser } from "./store/reducers/actionCreators/user"
 import { useAppDispatch, useAppSelector } from "./hooks/redux"
-import { userSlice } from "./store/reducers/userReducer"
+import userReducer, { userSlice } from "./store/reducers/userReducer"
 import fileReducer, { fileSlice } from "./store/reducers/fileReducer"
 import { queryFile } from "./store/reducers/actionCreators/file"
 
@@ -15,17 +15,19 @@ function App() {
 	const dispatch = useAppDispatch()
 	const { setCurrentDir } = fileSlice.actions
 	const { login } = userSlice.actions
+	const { user } = useAppSelector((state) => state.userReducer)
 	useEffect(() => {
 		async function checkAuthorization() {
 			const check = await queryUser.checkToken()
 			if (check) {
 				const currentDirId = await queryFile.getCurrent()
-				console.log(check)
 				dispatch(login(check))
 				dispatch(setCurrentDir(currentDirId))
 			}
 		}
-		checkAuthorization()
+		if (localStorage.getItem("accessToken")) {
+			checkAuthorization()
+		}
 	}, [])
 	return (
 		<BrowserRouter>

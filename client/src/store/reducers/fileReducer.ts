@@ -19,17 +19,30 @@ export const fileSlice = createSlice({
 		addFile(state, action: PayloadAction<propertiesFile>) {
 			state.files = [...state.files, action.payload]
 		},
+		setFile(state, action: PayloadAction<any>) {
+			state.files = [...action.payload]
+		},
 		deleteFile(state, action: PayloadAction<number>) {
 			state.files = [...state.files.filter((file) => file.id != action.payload)]
 		},
 		getFiles(state, action: PayloadAction<IFile>) {
 			state.currentDir = action.payload.currentDir
-			// console.log(action.payload)
 			state.files = action.payload.files
 		},
 		logout(state, action: PayloadAction<boolean>) {
 			state.currentDir = null
 			state.files = []
+		},
+		changeBeforeLink(state, action: PayloadAction<any>) {
+			console.log(action.payload)
+			console.log(state.files)
+			state.files = [
+				...state.files.map((file: any) =>
+					file.id == action.payload.id
+						? { ...file, accessLink: action.payload.accessLink }
+						: { ...file }
+				),
+			]
 		},
 	},
 })
