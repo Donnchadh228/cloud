@@ -24,6 +24,7 @@ class userService {
 		const hashPassword = await bcrypt.hash(password, 5)
 		const activationLink = uuid.v4()
 		//Розкоментувати
+
 		// await mailService.sendActivationMail(
 		// 	email,
 		// 	`${process.env.API_URL}/api/user/activate/${activationLink}`
@@ -42,7 +43,7 @@ class userService {
 			path: userDto.id,
 			userId: user.id,
 		})
-		console.log(file)
+
 		await Promise.all([
 			ActivationLinkModel.create({
 				link: activationLink,
@@ -101,9 +102,11 @@ class userService {
 		const candidate = await ActivationLinkModel.findOne({
 			where: { link: activationLink },
 		})
+		console.log("AAAAAAAAAAAA")
 		if (!candidate) {
 			throw ApiError.badRequest("User not found")
 		}
+
 		await UserModel.update(
 			{ isActivated: true },
 			{ where: { id: candidate.userId } }

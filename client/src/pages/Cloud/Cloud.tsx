@@ -90,7 +90,7 @@ const Cloud = () => {
 		}
 	}
 	document.title = "/CLOUD//"
-
+	// const [date, setDate] = useState<any>("2023-04-12")
 	return (
 		<>
 			{!user!.isActivated ? (
@@ -102,9 +102,16 @@ const Cloud = () => {
 			) : (
 				<div className={s.cloud}>
 					<Container>
+						{/* <input
+							type="date"
+							value={date}
+							onChange={(e) =>
+								console.log(new Date(e.target.value), new Date())
+							}
+						/> */}
 						<div className={s.button}>
 							<BlackButton onClick={backDir}>
-								<span>назад</span>
+								<span>Назад</span>
 							</BlackButton>
 							<BlackButton onClick={() => openPopup(event!, 1)}>
 								Створити нову теку

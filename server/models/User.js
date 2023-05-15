@@ -13,7 +13,7 @@ const User = sequelize.define(
 			require: true,
 		},
 		usedSpace: { type: DataTypes.BIGINT, require: true, defaultValue: 0 },
-		avatar: { type: DataTypes.STRING },
+		// avatar: { type: DataTypes.STRING },
 		isActivated: {
 			type: DataTypes.BOOLEAN,
 			require: true,

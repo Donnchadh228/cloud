@@ -16,17 +16,22 @@ function App() {
 	const { setCurrentDir } = fileSlice.actions
 	const { login } = userSlice.actions
 	const { user } = useAppSelector((state) => state.userReducer)
+	const [loading, setLoading] = useState<boolean>(true)
 	useEffect(() => {
 		async function checkAuthorization() {
+			setLoading(true)
 			const check = await queryUser.checkToken()
 			if (check) {
 				const currentDirId = await queryFile.getCurrent()
 				dispatch(login(check))
 				dispatch(setCurrentDir(currentDirId))
+				setLoading(false)
 			}
 		}
 		if (localStorage.getItem("accessToken")) {
 			checkAuthorization()
+		} else {
+			setLoading(false)
 		}
 	}, [])
 	return (
@@ -34,7 +39,14 @@ function App() {
 			<div className="App">
 				<NavBar />
 
-				<AppRouter />
+				{loading ? (
+					<div className="app__loading">
+						Loading...
+						<span></span>
+					</div>
+				) : (
+					<AppRouter />
+				)}
 				<Footer />
 			</div>
 		</BrowserRouter>

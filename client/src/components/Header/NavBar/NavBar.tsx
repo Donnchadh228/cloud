@@ -41,7 +41,12 @@ const NavBar: FC = () => {
 						<div className={s.navbar__center} key="1">
 							<ProgressBar value={usedSpace} max={diskSpace} units="Gb" />
 						</div>,
+
 						<div className={s.navbar__right} key="2">
+							<div className={s.navbar__avatar}>
+								{user!.login}
+								<img src="../../../../avatar.png" alt="" />
+							</div>
 							<GreyButton onClick={logout}>Вийти</GreyButton>
 						</div>,
 					]

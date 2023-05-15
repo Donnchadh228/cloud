@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react"
+import React from "react"
 import { Routes, Route } from "react-router-dom"
 import { authRoutes, publicRoutes } from "../routes"
 import { useAppSelector } from "../hooks/redux"
