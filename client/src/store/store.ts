@@ -1,3 +1,4 @@
+import errorsSlice from "./reducers/errorsReducer"
 import uploadSlice from "./reducers/uploaderReducer"
 import { combineReducers, configureStore } from "@reduxjs/toolkit"
 import userReducer from "./reducers/userReducer"
@@ -6,6 +7,7 @@ const rootReducer = combineReducers({
 	userReducer,
 	fileReducer,
 	uploadSlice,
+	errorsSlice,
 })
 
 export const setupStore = () => {

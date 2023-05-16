@@ -18,5 +18,5 @@ router.post("/logout", authMiddleware, userController.logout)
 router.post("/refresh", userController.refresh)
 router.get("/activate/:link", userController.activate)
 router.post("/checkAuth", userController.validateAccessToken)
-router.get("/zxc", userController.zxc)
+
 module.exports = router

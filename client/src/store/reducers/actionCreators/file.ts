@@ -6,6 +6,7 @@ import { useAppDispatch } from "../../../hooks/redux"
 import { fileSlice } from "../fileReducer"
 import { uploadSlice } from "../uploaderReducer"
 import { useDispatch } from "react-redux"
+import { errorsSlice } from "../errorsReducer"
 export class queryFile {
 	static createDir = async (
 		name: string,
@@ -28,7 +29,9 @@ export class queryFile {
 
 	static getFiles = async (
 		parentId?: number,
-		sort?: string
+		sort?: string,
+		limit?: number,
+		page?: number
 	): Promise<IFile> => {
 		try {
 			let url =
@@ -38,9 +41,13 @@ export class queryFile {
 			if (sort) {
 				url += "sort=" + sort
 			}
+			url += `&limit=${limit}&page=${page}`
 
 			const response = await $authHost.get(url)
-			const data: IFile = { files: response.data }
+			const data: any = {
+				files: response.data.rows,
+				page: response.data.count,
+			}
 			return data
 		} catch (e) {
 			return { files: [], currentDir: null }
@@ -110,16 +117,12 @@ export class queryFile {
 							uploadFile.progress = Math.round(
 								(progressEvent.loaded * 100) / totalLength
 							)
-							// console.log(uploadFile.progress)
-							// alert(uploadFile.progress)
+
 							dispatch(changeUploadFile(uploadFile))
-							// console.log(uploadFile.progress)
 						}
 					},
 				}
 			)
-
-			// console.log(response.data)
 
 			return response.data
 		} catch (e: any) {
@@ -153,15 +156,21 @@ export class queryFile {
 			console.log(e)
 		}
 	}
-	static async deleteFile(file: any) {
+	static async deleteFile(file: any, dispatch: any) {
 		try {
 			const response: any = await $authHost.delete(
 				import.meta.env.VITE_APP_API_URL + `/api/files?id=${file.id}`
 			)
 			return response.data.message
 		} catch (e: any) {
-			console.log(e.response.data.message)
-			// alert(e.response.data.message)
+			const { setErrors } = errorsSlice.actions
+			dispatch(
+				setErrors({
+					error: e.response.data.message,
+					visible: true,
+					isError: true,
+				})
+			)
 		}
 	}
 	static async searchFiles(search: string, dispatch: any) {
@@ -174,9 +183,14 @@ export class queryFile {
 
 			return response.data.message
 		} catch (e: any) {
-			console.log(e)
-			console.log(e.response.data.message)
-			// alert(e.response.data.message)
+			const { setErrors } = errorsSlice.actions
+			dispatch(
+				setErrors({
+					error: e.response.data.message,
+					visible: true,
+					isError: true,
+				})
+			)
 		}
 	}
 	static async getLinkFile(fileId: number, dispatch: any) {

@@ -88,17 +88,6 @@ class UserController {
 			next(e)
 		}
 	}
-	async zxc(req, res) {
-		try {
-			const asd = {
-				id: 2,
-				text: "ASDASDASDASDASD",
-			}
-			return res.json(asd)
-		} catch (e) {
-			next(e)
-		}
-	}
 }
 
 module.exports = new UserController()

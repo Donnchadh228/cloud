@@ -14,19 +14,15 @@ class FileService {
 			// try {
 			if (!fs.existsSync(filePath)) {
 				fs.mkdirSync(filePath)
-				return resolve({ message: "success create folder" })
+				return resolve({ message: "Успішно створено теку" })
 			} else {
-				throw ApiError.badRequest("File already exist")
+				throw ApiError.badRequest("Така тека вже є")
 
 				return reject({ message: "File already exist" })
 			}
-			// } catch (e) {
-			// 	throw ApiError.badRequest("file error")
-			// 	return reject({ message: "file error" })
-			// }
 		})
 	}
-	UploadFile(file) {}
+	// UploadFile(file) {}
 	deleteFile(file) {
 		try {
 			const path = process.env.FILEPATH + "\\" + file.path
@@ -37,25 +33,8 @@ class FileService {
 				fs.unlinkSync(path)
 			}
 		} catch (e) {
-			throw ApiError.badRequest("AAAAAAAAAAAAA")
+			throw ApiError.badRequest("Помилка при видаленні файлу")
 		}
-	}
-	crr(file) {
-		console.log("ASDDSASDSAD")
-		const filePath = `${process.env.FILEPATH}\\${file.user}\\${file.path}`
-		console.log(filePath)
-		// return new Promise((resolve, reject) => {
-		// 	try {
-		// 		if (!fs.existsSync(filePath)) {
-		// 			fs.mkdirSync(filePath)
-		// 			return resolve({ message: "success create folder" })
-		// 		} else {
-		// 			return reject({ message: "File already exist" })
-		// 		}
-		// 	} catch (e) {
-		// 		return reject({ message: "file error" })
-		// 	}
-		// })
 	}
 }
 

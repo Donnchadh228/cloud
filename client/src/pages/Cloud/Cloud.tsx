@@ -7,10 +7,12 @@ import { useAppDispatch, useAppSelector } from "../../hooks/redux"
 import { fileSlice } from "../../store/reducers/fileReducer"
 import { queryFile } from "../../store/reducers/actionCreators/file"
 import PopUp from "../../components/UI/PopUp/PopUp"
-import { resizePath } from "../../utils/utils"
+import { convertSize, resizePath } from "../../utils/utils"
 import PopUpUpload from "../../components/UI/PopUp/PopUpUpload"
 import Uploader from "../../components/Cloud/Uploader/Uploader"
 import WhiteInput from "../../components/UI/Input/WhiteInput/WhiteInput"
+import Pagination from "../../components/Pagination/Pagination"
+import PopUpError from "../../components/UI/PopUpError/PopUpError"
 const Cloud = () => {
 	const [loading, setLoading] = useState<boolean>(true)
 	const { currentDir, files } = useAppSelector((state) => state.fileReducer)
@@ -25,20 +27,23 @@ const Cloud = () => {
 	const [sort, setSort] = useState<string>("")
 	const [search, setSearch] = useState<string>("")
 	const [searchTimeout, setSearchTimeout] = useState<any>(false)
-	// useEffect(() => {
-	// 	const asd = async () => {
-	// 		const paths = await queryFile.getCurrentPath(currentDir!)
-	// 		console.log(paths)
-	// 		if (paths) {
-	// 			setObjectCurrentFile(paths)
-	// 			setPath(resizePath(paths.path))
-	// 		}
-	// 	}
-	// })
+	const [currentPage, setCurrentPage] = useState<number>(1)
+	const [countPage, setCountPage] = useState<number>(1)
+	const { isVisible, files: filesUpload } = useAppSelector(
+		(state) => state.uploadSlice
+	)
+
 	const fetchFile = async () => {
 		setLoading(true)
-		const query = await queryFile.getFiles(currentDir!, sort)
+		const query: any = await queryFile.getFiles(
+			currentDir!,
+			sort,
+			10,
+			currentPage
+		)
 		const paths = await queryFile.getCurrentPath(currentDir!)
+
+		setCountPage(Math.ceil(query.page / 10))
 
 		setPath(resizePath(paths.path))
 		query.currentDir = currentDir
@@ -49,7 +54,7 @@ const Cloud = () => {
 	}
 	useEffect(() => {
 		fetchFile()
-	}, [currentDir, sort])
+	}, [currentDir, sort, currentPage])
 
 	const backDir = async () => {
 		const paths = await queryFile.getCurrentPath(currentDir!)
@@ -77,9 +82,10 @@ const Cloud = () => {
 			setSearchTimeout(
 				setTimeout(
 					() => {
-						queryFile
-							.searchFiles(e.target.value, useDispatch)
-							.then(() => setLoading(false))
+						queryFile.searchFiles(e.target.value, useDispatch).then(() => {
+							setLoading(false)
+							setCountPage(1)
+						})
 					},
 					500,
 					e.target.value
@@ -90,7 +96,7 @@ const Cloud = () => {
 		}
 	}
 	document.title = "/CLOUD//"
-	// const [date, setDate] = useState<any>("2023-04-12")
+
 	return (
 		<>
 			{!user!.isActivated ? (
@@ -102,13 +108,6 @@ const Cloud = () => {
 			) : (
 				<div className={s.cloud}>
 					<Container>
-						{/* <input
-							type="date"
-							value={date}
-							onChange={(e) =>
-								console.log(new Date(e.target.value), new Date())
-							}
-						/> */}
 						<div className={s.button}>
 							<BlackButton onClick={backDir}>
 								<span>Назад</span>
@@ -140,6 +139,7 @@ const Cloud = () => {
 								type="input"
 								value={search}
 								placeholder="Введіть назву файлу"
+								title="Показує до 20 результатів"
 							/>
 						</div>
 						<div className={s.direction}>
@@ -156,7 +156,15 @@ const Cloud = () => {
 							</div>
 						)}
 					</Container>
-
+					{files.length != 0 ? (
+						<Pagination
+							count={countPage}
+							activePage={currentPage}
+							changePage={setCurrentPage}
+						/>
+					) : (
+						""
+					)}
 					{popup == 1 ? (
 						<PopUp setClosePopup={setPopup} title="Create dir"></PopUp>
 					) : (
@@ -170,7 +178,10 @@ const Cloud = () => {
 					) : (
 						""
 					)}
-					{<Uploader />}
+
+					<PopUpError />
+
+					{isVisible && <Uploader files={filesUpload} />}
 				</div>
 			)}
 		</>

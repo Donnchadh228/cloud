@@ -17,9 +17,9 @@ class userService {
 		})
 		if (candidate) {
 			if (candidate.login === login)
-				throw ApiError.badRequest("this login already exists")
+				throw ApiError.badRequest("Цей login вже є")
 			if (candidate.email === email)
-				throw ApiError.badRequest("this Email already exists")
+				throw ApiError.badRequest("Цей Email вже є")
 		}
 		const hashPassword = await bcrypt.hash(password, 5)
 		const activationLink = uuid.v4()
@@ -66,12 +66,12 @@ class userService {
 		})
 
 		if (!user) {
-			throw ApiError.badRequest("User not found")
+			throw ApiError.badRequest("Такого користувача не знайдено")
 		}
 		const isPassValid = await bcrypt.compareSync(password, user.password)
 
 		if (!isPassValid) {
-			throw ApiError.badRequest("Invalid password")
+			throw ApiError.badRequest("Невірний пароль")
 		}
 		const userDto = new UserDto(user)
 		const tokens = tokenService.generateTokens({ ...userDto })
@@ -84,12 +84,12 @@ class userService {
 	}
 	async refresh(refreshToken) {
 		if (refreshToken === "undefined" || !refreshToken) {
-			throw ApiError.UnauthorizedError("User not authorized")
+			throw ApiError.UnauthorizedError("Користувач не авторизований")
 		}
 		const userData = tokenService.validateRefreshToken(refreshToken)
 		const tokenFromDb = await tokenService.findToken(refreshToken)
 		if (!userData || !tokenFromDb) {
-			throw ApiError.UnauthorizedError("User not authorized")
+			throw ApiError.UnauthorizedError("Користувач не авторизований")
 		}
 		const user = await UserModel.findOne({ where: { id: userData.id } })
 		const userDto = new UserDto(user)
@@ -104,7 +104,7 @@ class userService {
 		})
 		console.log("AAAAAAAAAAAA")
 		if (!candidate) {
-			throw ApiError.badRequest("User not found")
+			throw ApiError.badRequest("Такого користувача не знайдено")
 		}
 
 		await UserModel.update(

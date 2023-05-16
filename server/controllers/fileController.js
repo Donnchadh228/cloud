@@ -13,7 +13,7 @@ class FileController {
 			const { name, type, parentId } = req.body
 			const { id: idUser } = req.res.user
 			if (name.length > 40) {
-				name = name.substring(0, 40) // обрезаем строку до первых 40 символов
+				name = name.substring(0, 40)
 			}
 			const file = new File({
 				name: name,
@@ -34,53 +34,66 @@ class FileController {
 			await file.save()
 			return res.json(file)
 		} catch (e) {
-			// console.log(e)
 			next(e)
 		}
 	}
 	async getFiles(req, res, next) {
 		try {
 			const { parentId, sort } = req.query
+			let { limit, page } = req.query
+			page = Number(page || 1)
+			limit = Number(limit || 10)
+			let offset = page * limit - limit
 			let files
 			console.log(req.query)
 
 			const { id: idUser } = req.res.user
 			let query
-			console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 			if (parentId) {
 				query = { userId: idUser, parentId: parentId }
 			} else query = { userId: idUser, parentId: null }
 			switch (sort) {
 				case "name":
-					files = await File.findAll({
+					files = await File.findAndCountAll({
 						where: { ...query, path: { [Op.ne]: `${idUser}` } },
 						order: [["name", "DESC"]],
+						offset: offset,
+						limit: limit,
 					})
 					break
 				case "type":
-					files = await File.findAll({
+					files = await File.findAndCountAll({
 						where: { ...query, path: { [Op.ne]: `${idUser}` } },
 						order: [["type", "DESC"]],
+						offset: offset,
+						limit: limit,
 					})
 					break
 				case "data":
-					files = await File.findAll({
+					files = await File.findAndCountAll({
 						where: { ...query, path: { [Op.ne]: `${idUser}` } },
 						order: [["createdAt", "DESC"]],
+						offset: offset,
+						limit: limit,
 					})
 					break
 				case "size":
-					files = await File.findAll({
+					files = await File.findAndCountAll({
 						where: { ...query, path: { [Op.ne]: `${idUser}` } },
 						order: [["size", "DESC"]],
+						offset: offset,
+						limit: limit,
 					})
 					break
 				default:
-					files = await File.findAll({
+					files = await File.findAndCountAll({
 						where: { ...query, path: { [Op.ne]: `${idUser}` } },
+						offset: offset,
+						limit: limit,
 					})
 					break
 			}
+
 			return res.status(200).json(files)
 		} catch (e) {
 			console.log(e)
@@ -117,7 +130,9 @@ class FileController {
 			console.log(file.size > 2147483647)
 			if (file.size > 2147483647) {
 				// throw ApiError.badRequest("File already exist")
-				return res.status(400).json({ message: "File size exceeds 2 GB" })
+				return res
+					.status(400)
+					.json({ message: "Файл не може бути більше 2 GB" })
 			}
 			const { name } = req.body
 			const { id: idUser } = req.res.user
@@ -125,13 +140,13 @@ class FileController {
 				where: { userId: idUser, id: req.body.parentId },
 			})
 			if (name.length > 40) {
-				name = name.substring(0, 40) // обрезаем строку до первых 40 символов
+				name = name.substring(0, 40)
 				file.name = name.substring(0, 40)
 			}
 			const user = await User.findOne({ where: { id: idUser } })
 			if (user.usedSpace + file.size > user.diskSpace) {
 				// throw ApiError.badRequest("There no space on the disk")
-				return res.status(400).json({ message: "There no space on the disk" })
+				return res.status(400).json({ message: "У Вас немає місця на диску" })
 			}
 			user.usedSpace = user.usedSpace + file.size
 
@@ -145,7 +160,7 @@ class FileController {
 			}
 			if (fs.existsSync(path)) {
 				// throw ApiError.badRequest("File already exist")
-				return res.status(400).json({ message: "File already exist" })
+				return res.status(400).json({ message: "Файл з такою назвою вже є" })
 			}
 			file.mv(path)
 			// console.log(file)
@@ -180,10 +195,10 @@ class FileController {
 			if (fs.existsSync(path)) {
 				return res.download(path, file.name)
 			}
-			return res.status(400).json({ message: "Download Error" })
+			return res.status(400).json({ message: "Помилка при завантаженні файлу" })
 		} catch (e) {
 			console.log(e)
-			return res.status(500).json({ message: "Download error" })
+			return res.status(500).json({ message: "Помилка при завантаженні файлу" })
 		}
 	}
 	async deleteFile(req, res, next) {
@@ -197,11 +212,10 @@ class FileController {
 			user.usedSpace = user.usedSpace - file.size
 			user.save()
 			console.log("AAAAAAAA")
-			return res.json({ message: "File was deleted" })
+			return res.json({ message: "Файл видалений" })
 		} catch (e) {
 			// next(e)
-			// console.log(e)
-			return res.status(400).json({ message: "File is not empty" })
+			return res.status(400).json({ message: "Тека не пуста" })
 		}
 	}
 	async searchFile(req, res) {
@@ -211,11 +225,11 @@ class FileController {
 			console.log(search)
 			let files = await File.findAll({ where: { userId: idUser } })
 			files = files.filter((file) => file.name.includes(search))
-			return res.json(files)
+			console.log(files)
+			return res.json(files.slice(0, 20))
 		} catch (e) {
 			console.log("AAAAAAAAAA")
-			// console.log(e)
-			return res.status(400).json({ message: "File not found" })
+			return res.status(400).json({ message: "Помилка при пошуку файлу" })
 		}
 	}
 	async getLinkFile(req, res) {
@@ -232,7 +246,7 @@ class FileController {
 		} catch (e) {
 			console.log("AAAAAAAAAA")
 			// console.log(e)
-			return res.status(400).json({ message: "File not found" })
+			return res.status(400).json({ message: "Файл не знайдено" })
 		}
 	}
 	async getFileByLink(req, res) {
@@ -247,7 +261,7 @@ class FileController {
 			}
 			return res.json(file)
 		} catch (e) {
-			return res.status(400).json({ message: "File not found" })
+			return res.status(400).json({ message: "Файл не знайдено" })
 		}
 	}
 	async downloadByLink(req, res) {

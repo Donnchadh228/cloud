@@ -8,6 +8,7 @@ import { queryFile } from "../../../store/reducers/actionCreators/file"
 import { propertiesFile } from "../../../models/IFIle"
 import { userSlice } from "../../../store/reducers/userReducer"
 import { Link } from "react-router-dom"
+import { errorsSlice } from "../../../store/reducers/errorsReducer"
 interface FileItemInterface {
 	name: string
 	date: string
@@ -27,6 +28,7 @@ const FileItem: FC<FileItemInterface> = ({
 	const useDispatch = useAppDispatch()
 	const { setCurrentDir, deleteFile: deleteFileRedux } = fileSlice.actions
 	const { changeSpace } = userSlice.actions
+	const { setErrors } = errorsSlice.actions
 	const change = () => {
 		if (isFolder) useDispatch(setCurrentDir(id))
 	}
@@ -46,9 +48,9 @@ const FileItem: FC<FileItemInterface> = ({
 	}
 	const deleteFile = async (e: Event) => {
 		e.stopPropagation()
-		const response = await queryFile.deleteFile(file)
+		const response = await queryFile.deleteFile(file, useDispatch)
 		if (response) {
-			alert(response)
+			useDispatch(setErrors({ error: response, visible: true, isError: false }))
 			useDispatch(deleteFileRedux(file!.id))
 			useDispatch(changeSpace(-file!.size))
 		}
@@ -59,7 +61,15 @@ const FileItem: FC<FileItemInterface> = ({
 					.writeText(
 						import.meta.env.VITE_APP_LINK_SARING + "?Link=" + file.accessLink
 					)
-					.then(() => alert("Посилання скопійоване"))
+					.then(() =>
+						useDispatch(
+							setErrors({
+								error: "Посилання скопійоване",
+								visible: true,
+								isError: false,
+							})
+						)
+					)
 			: queryFile.getLinkFile(id, useDispatch)
 	}
 	return (
